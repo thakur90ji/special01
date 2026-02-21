@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Betu ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Base Styles */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Prevent scrolling by default */
+        }
+        .container {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff4d4d;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #e60000;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+            color: #333;
+        }
+        .message {
+            font-size: 1.5rem;
+            margin: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .next-arrow {
+            font-size: 3rem;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            margin-top: 20px;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Section 1: Lock Screen */
+        #lock-screen {
+            background: #000 url('https://i.imgur.com/M1f5Z5P.png') repeat; /* Starry background */
+            z-index: 10;
+        }
+        #error-msg {
+            color: #ff4d4d;
+            margin-top: 10px;
+        }
+
+        /* Section 2: Cake & Countdown */
+        #cake-section {
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4); /* Romantic gradient */
+            transform: translateY(100%); /* Start off-screen */
+        }
+        .falling-hearts span {
+            position: absolute;
+            top: -10%;
+            color: #ff4d4d;
+            font-size: 2rem;
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
+            100% { top: 110%; transform: translateX(100px) rotate(360deg); opacity: 0; }
+        }
+        #countdown {
+            font-size: 5rem;
+            font-weight: bold;
+        }
+        #cake-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin-top: 20px;
+        }
+        #cake-img {
+            width: 100%;
+            height: auto;
+        }
+        .cake-decor {
+            position: absolute;
+            display: none;
+        }
+        #bunting { top: -50px; left: 0; width: 100%; }
+        #candle { top: -40px; left: 50%; transform: translateX(-50%); width: 30px; }
+        #knife { top: 50%; right: -50px; width: 80px; cursor: pointer; }
+
+        /* Section 3: Balloons */
+        #balloon-section {
+            background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
+            transform: translateX(100%);
+        }
+        .balloon-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+        .balloon {
+            width: 80px;
+            height: 100px;
+            background-color: #ff6b6b;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            width: 2px;
+            height: 40px;
+            background-color: #fff;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+
+        /* Section 4: Memory Lane */
+        #memory-section {
+            background: linear-gradient(to bottom, #fbc2eb, #a6c1ee);
+            transform: translateX(100%);
+        }
+        #first-photo {
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        #typed-message {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            text-align: left;
+            max-width: 90%;
+            margin: 20px auto;
+            min-height: 100px; /* Reserve space */
+        }
+
+        /* Section 5: Grand Finale */
+        #finale-section {
+            background: #000;
+            transform: translateY(100%);
+        }
+        #final-video {
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        #heart-qr-container {
+            display: none; /* Hidden by default */
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            background: url('https://i.imgur.com/4xZ8Y1p.png') no-repeat center center; /* Heart background from image_0.png */
+            background-size: contain;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #qr-code-canvas {
+            width: 150px !important;
+            height: 150px !important;
+            border-radius: 15px;
+        }
+        #admin-panel {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            color: black;
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        #admin-panel h2 { color: #ff4d4d; }
+        #admin-panel label { display: block; margin-top: 15px; font-weight: bold; }
+        #admin-panel input, #admin-panel textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        #generated-qr-container { text-align: center; margin-top: 30px; }
+
+    </style>
+</head>
+<body>
+
+    <audio id="birthday-song" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"> </audio>
+    <audio id="romantic-song" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg"> </audio>
+    <audio id="pop-sound">
+        <source src="https://www.soundjay.com/button/sounds/button-3.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="lock-screen" class="container">
+        <div class="center-content">
+            <div class="message">enter your full name❤️</div>
+            <input type="text" id="password-input" placeholder="Full Name...">
+            <button onclick="checkPassword()">Unlock</button>
+            <div id="error-msg" class="hidden">retry karo 😒<br><small>(Hint: 2 words are there with space between them)</small></div>
+        </div>
+    </div>
+
+    <div id="cake-section" class="container">
+        <div class="falling-hearts" id="hearts-container"></div>
+        <div class="center-content">
+            <div id="countdown" class="hidden">3</div>
+            <div id="cake-container" class="hidden">
+                <img id="cake-img" src="https://i.imgur.com/xyz123.png" alt="Cake"> <img id="bunting" class="cake-decor" src="https://i.imgur.com/abc456.png" alt="Bunting"> <img id="candle" class="cake-decor" src="https://i.imgur.com/def789.png" alt="Lit Candle"> <img id="knife" class="cake-decor" src="https://i.imgur.com/ghi012.png" alt="Knife" onclick="cutCake()"> </div>
+            <button id="decorate-btn" class="hidden" onclick="decorateCake()">decorate</button>
+            <div id="cake-message" class="message hidden">happy birthday mera betu ❤️</div>
+            <div id="cake-arrow" class="next-arrow hidden" onclick="nextSection('balloon-section')">⬇️</div>
+        </div>
+    </div>
+
+    <div id="balloon-section" class="container">
+        <div class="center-content">
+            <div class="message">Pop all the balloons!</div>
+            <div class="balloon-container">
+                <div class="balloon" onclick="popBalloon(this)"></div>
+                <div class="balloon" onclick="popBalloon(this)"></div>
+                <div class="balloon" onclick="popBalloon(this)"></div>
+                <div class="balloon" onclick="popBalloon(this)"></div>
+            </div>
+            <div id="balloon-arrow" class="next-arrow hidden" onclick="nextSection('memory-section')">➡️</div>
+        </div>
+    </div>
+
+    <div id="memory-section" class="container">
+        <div class="center-content">
+            <button id="play-romantic-btn" onclick="playRomanticSong()">song for u bubuu ▶️</button>
+            <div id="photo-container" class="hidden">
+                <img id="first-photo" src="" alt="Our First Photo"> <div class="message">apni pahali photo which made me fall more for u mera bacha 🥺</div>
+                <button onclick="typeMessage()">want to read what I wrote for u</button>
+                <div id="typed-message"></div>
+            </div>
+            <div id="memory-arrow" class="next-arrow hidden" onclick="nextSection('finale-section')">⬇️</div>
+        </div>
+    </div>
+
+    <div id="finale-section" class="container">
+        <div class="center-content">
+            <video id="final-video" controls>
+                <source src="" type="video/mp4"> Your browser does not support the video tag.
+            </video>
+            <div class="message">thank u for coming in my life ❤️🥹 and once again wish u a very very happy birathday my betu</div>
+        </div>
+    </div>
+
+    <div id="admin-panel">
+        <div class="center-content" style="display: block; text-align: left;">
+            <h2>Creator Dashboard</h2>
+            <p>Fill in the details and click generate to get your special heart QR code!</p>
+            
+            <label for="photo-url">First Photo URL (e.g., from GitHub):</label>
+            <input type="text" id="photo-url" placeholder="https://your-github-link.com/photo.jpg">
+
+            <label for="video-url">Final Video URL (e.g., from GitHub):</label>
+            <input type="text" id="video-url" placeholder="https://your-github-link.com/video.mp4">
+
+            <label for="long-message">Your Long Emotional Message:</label>
+            <textarea id="long-message" rows="5" placeholder="Type your heartfelt message here..."></textarea>
+
+            <button onclick="generateGift()">Generate Magic Link & QR Code</button>
+
+            <div id="generated-qr-container" class="hidden">
+                <h3>Your Custom QR Code!</h3>
+                <p>Screenshot this and send it to her.</p>
+                <div id="heart-qr-output" style="position: relative; width: 300px; height: 300px; margin: 20px auto; background: url('https://i.imgur.com/4xZ8Y1p.png') no-repeat center center; background-size: contain; display: flex; justify-content: center; align-items: center;">
+                    <canvas id="admin-qr-canvas" style="width: 150px; height: 150px; border-radius: 15px;"></canvas>
+                </div>
+                <p id="final-link" style="word-break: break-all; color: blue;"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Global Variables
+        let balloonsPopped = 0;
+        const password = "Shivani thakur";
+        const birthdaySong = document.getElementById('birthday-song');
+        const romanticSong = document.getElementById('romantic-song');
+        const popSound = document.getElementById('pop-sound');
+
+        // --- Section 1: Password Lock ---
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            if (input === password) {
+                document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+                startCelebration();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        // --- Section 2: Celebration ---
+        function startCelebration() {
+            document.getElementById('cake-section').style.transform = 'translateY(0)';
+            createHearts();
+            birthdaySong.play();
+            startCountdown();
+        }
+
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('span');
+                heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💋';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        function startCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.classList.remove('hidden');
+            let count = 3;
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.innerText = count;
+                } else {
+                    clearInterval(interval);
+                    countdownEl.classList.add('hidden');
+                    document.getElementById('cake-container').classList.remove('hidden');
+                    document.getElementById('decorate-btn').classList.remove('hidden');
+                }
+            }, 1000);
+        }
+
+        function decorateCake() {
+            document.getElementById('decorate-btn').classList.add('hidden');
+            document.getElementById('bunting').style.display = 'block';
+            document.getElementById('candle').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('knife').style.display = 'block';
+            }, 500);
+        }
+
+        function cutCake() {
+            document.getElementById('cake-message').classList.remove('hidden');
+            document.getElementById('cake-arrow').classList.remove('hidden');
+        }
+
+        // --- Navigation ---
+        function nextSection(sectionId) {
+            const currentSection = document.querySelector('.container[style*="translateY(0)"], .container[style*="translateX(0)"]');
+            const nextSectionEl = document.getElementById(sectionId);
+
+            if (sectionId === 'balloon-section' || sectionId === 'memory-section') {
+                currentSection.style.transform = 'translateX(-100%)';
+                nextSectionEl.style.transform = 'translateX(0)';
+            } else {
+                currentSection.style.transform = 'translateY(-100%)';
+                nextSectionEl.style.transform = 'translateY(0)';
+            }
+
+            if (sectionId === 'memory-section') {
+                birthdaySong.pause();
+            }
+        }
+
+        // --- Section 3: Balloons ---
+        function popBalloon(balloon) {
+            if (balloon.style.visibility === 'hidden') return;
+            popSound.currentTime = 0;
+            popSound.play();
+            balloon.style.visibility = 'hidden';
+            balloonsPopped++;
+            if (balloonsPopped === 4) {
+                document.getElementById('balloon-arrow').classList.remove('hidden');
+            }
+        }
+
+        // --- Section 4: Memory Lane ---
+        function playRomanticSong() {
+            document.getElementById('play-romantic-btn').classList.add('hidden');
+            romanticSong.play();
+            document.getElementById('photo-container').classList.remove('hidden');
+        }
+
+        function typeMessage() {
+            const messageContainer = document.getElementById('typed-message');
+            // Get message from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const messageText = urlParams.get('msg') || "This is a placeholder message. Please use the admin panel to generate your link with your own beautiful words.";
+            
+            let i = 0;
+            const speed = 4000 / messageText.length; // Calculate speed to finish in 4s
+
+            function typeWriter() {
+                if (i < messageText.length) {
+                    messageContainer.innerHTML += messageText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    document.getElementById('memory-arrow').classList.remove('hidden');
+                }
+            }
+            typeWriter();
+        }
+        
+        // --- Init & Admin Panel ---
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin')) {
+                document.getElementById('admin-panel').style.display = 'block';
+            } else {
+                // Load content from URL params for the user view
+                const photoUrl = urlParams.get('photo');
+                const videoUrl = urlParams.get('video');
+                
+                if (photoUrl) document.getElementById('first-photo').src = photoUrl;
+                if (videoUrl) document.querySelector('#final-video source').src = videoUrl;
+                document.getElementById('final-video').load(); // Reload video element
+            }
+        };
+
+        function generateGift() {
+            const photoUrl = document.getElementById('photo-url').value;
+            const videoUrl = document.getElementById('video-url').value;
+            const message = document.getElementById('long-message').value;
+
+            if (!photoUrl || !videoUrl || !message) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            // Create the final link
+            const baseUrl = window.location.href.split('?')[0];
+            const finalLink = `${baseUrl}?photo=${encodeURIComponent(photoUrl)}&video=${encodeURIComponent(videoUrl)}&msg=${encodeURIComponent(message)}`;
+
+            // Display the link
+            const linkDisplay = document.getElementById('final-link');
+            linkDisplay.innerHTML = `Your Link: <a href="${finalLink}" target="_blank">${finalLink}</a>`;
+
+            // Generate QR Code inside the heart
+            const qr = new QRious({
+                element: document.getElementById('admin-qr-canvas'),
+                value: finalLink,
+                size: 150,
+                foreground: '#ff4d4d', // Match the red color
+                level: 'H'
+            });
+            
+            document.getElementById('generated-qr-container').classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>
